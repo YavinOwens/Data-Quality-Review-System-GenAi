@@ -2,7 +2,8 @@
 
 ## Title
 Data Quality Review System Gen Ai Prototype - Technology for Good
-Work in Progress
+
+[[Work in Progress]]
 
 ## Scope
 This document extends the previous architecture with C4 views, L1-L4 architecture depth, quality gates, human-in-the-loop judging, notebook-based monitoring, MLflow tracking, and model-routing across local and cloud inference paths.
