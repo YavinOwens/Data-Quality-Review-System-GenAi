@@ -1,17 +1,21 @@
 # Interactive Architecture Document
 
 ## Title
-C4 and L1-L4 Architecture for a Human-in-the-Loop Generative AI Workstream
+Data Quality Review System Gen Ai Prototype - Technology for Good
 
 ## Scope
 This document extends the previous architecture with C4 views, L1-L4 architecture depth, quality gates, human-in-the-loop judging, notebook-based monitoring, MLflow tracking, and model-routing across local and cloud inference paths.
 
+## Architecture Statement
+
+This architecture uses C4 and L1-L4 views to describe a governed generative AI workstream in which local Ollama-hosted Llama 3.2 handles private and low-cost tasks, cloud 20B and GPT-120OSS-B models handle harder reasoning, and MLflow plus notebook-based review provide the tracing, human feedback, and operational monitoring needed for trustworthy human-in-the-loop adjudication 
+
 The workstream assumes:
-- **Local model**: Llama 3.2B via Ollama for private, low-cost, low-latency tasks [web:45].
+- **Local model**: Llama 3.2B via Ollama for private, low-cost, low-latency tasks .
 - **Cloud open-weight model path**: GPT-120OSS-B cloud endpoint for high-capacity reasoning workloads.
 - **Cloud mid-tier model path**: 20B-class cloud model for balanced cost/performance workloads.
-- **Tracking and evaluation**: MLflow/MLflow 3 for tracing, evaluation, and human feedback workflows [web:34][web:38][web:47].
-- **Human review**: judges and analysts review low-confidence, policy-sensitive, and contested outputs in notebook-led and operational review loops [web:34][web:41].
+- **Tracking and evaluation**: MLflow/MLflow 3 for tracing, evaluation, and human feedback workflows
+- **Human review**: judges and analysts review low-confidence, policy-sensitive, and contested outputs in notebook-led and operational review loops.
 
 ---
 
@@ -34,11 +38,11 @@ The workstream assumes:
 
 ## 1. Architecture Principles
 
-1. Keep **human review** in the loop for legal, regulatory, adjudication, and low-confidence decisions [web:34][web:38].
-2. Use **MLflow tracing and feedback capture** to connect prompts, runs, outputs, and reviewer annotations into one governed lifecycle [web:34][web:41][web:47].
+1. Keep **human review** in the loop for legal, regulatory, adjudication, and low-confidence decisions .
+2. Use **MLflow tracing and feedback capture** to connect prompts, runs, outputs, and reviewer annotations into one governed lifecycle .
 3. Route work to the **smallest effective model** first, escalating only when quality gates require it.
-4. Keep sensitive work close to the edge with **local Ollama + Llama 3.2** where privacy, cost, or offline access matter [web:45].
-5. Separate orchestration, inference, review, and governance into clean containers so the system remains auditable and evolvable [web:43][web:46].
+4. Keep sensitive work close to the edge with **local Ollama + Llama 3.2** where privacy, cost, or offline access matter .
+5. Separate orchestration, inference, review, and governance into clean containers so the system remains auditable and evolvable .
 
 ---
 
@@ -53,7 +57,7 @@ Quality gates decide whether a request can auto-complete, needs a stronger model
 | G3 Model confidence | Low confidence, inconsistent reasoning, unsafe output | Send to judge queue |
 | G4 Policy control | Sensitive category, regulated content, retention conflict | Mandatory human approval |
 | G5 Judge disagreement | Two judges disagree or notebook review flags ambiguity | Escalate to senior reviewer |
-| G6 Production drift | Quality trend falls in MLflow traces | Retrain, reprompt, or rollback [web:34][web:35] |
+| G6 Production drift | Quality trend falls in MLflow traces | Retrain, reprompt, or rollback |
 
 ### Gate Logic
 - **Pass**: result can move to operational output.
@@ -65,7 +69,7 @@ Quality gates decide whether a request can auto-complete, needs a stronger model
 
 ## 3. C4 Level 1 — System Context
 
-C4 Level 1 shows the system in scope, the people around it, and the external services it interacts with [web:40][web:43][web:46].
+C4 Level 1 shows the system in scope, the people around it, and the external services it interacts with .
 
 ```mermaid
 flowchart TD
@@ -92,13 +96,13 @@ flowchart TD
 ```
 
 ### Context Statement
-The system serves business users and judges, uses local and cloud models, records traces and feedback in MLflow, and integrates with enterprise data and governance services [web:34][web:41][web:45].
+The system serves business users and judges, uses local and cloud models, records traces and feedback in MLflow, and integrates with enterprise data and governance services .
 
 ---
 
 ## 4. C4 Level 2 — Container View
 
-C4 Level 2 breaks the system into applications and data stores, such as web apps, APIs, workers, notebooks, and registries [web:43][web:46].
+C4 Level 2 breaks the system into applications and data stores, such as web apps, APIs, workers, notebooks, and registries.
 
 ```mermaid
 flowchart LR
@@ -135,13 +139,13 @@ GPT-120OSS-B / 20B]
 ### Container Notes
 - The **Python orchestration API** coordinates workflow, model routing, and exception handling.
 - The **Rust library via PyO3** handles performance-critical parsing and validation.
-- **Notebook workspace** supports exploratory analysis, judge review experiments, and trace investigation, while **MLflow** records experiments, traces, prompts, outputs, and feedback [web:36][web:41].
+- **Notebook workspace** supports exploratory analysis, judge review experiments, and trace investigation, while **MLflow** records experiments, traces, prompts, outputs, and feedback .
 
 ---
 
 ## 5. C4 Level 3 — Component View
 
-C4 Level 3 zooms into a single container and shows its internal components [web:40][web:43].
+C4 Level 3 zooms into a single container and shows its internal components .
 
 ### Level 3 for the Python Orchestration API
 
@@ -180,14 +184,14 @@ flowchart TD
 | Policy and Quality Gate Engine | Applies safety, confidence, and workflow gates |
 | Model Routing Service | Chooses local, 20B cloud, or GPT-120OSS-B cloud path |
 | Judge Escalation Service | Sends cases to review queues and captures decision outcomes |
-| Trace Logger | Sends prompts, traces, scores, and metadata to MLflow [web:34][web:41] |
+| Trace Logger | Sends prompts, traces, scores, and metadata to MLflow |
 | Response Composer | Packages final answer, citations, confidence, and audit note |
 
 ---
 
 ## 6. C4 Level 4 — Code and Implementation View
 
-C4 Level 4 is the code-level or implementation-level view of classes, modules, packages, or functions within a component [web:43].
+C4 Level 4 is the code-level or implementation-level view of classes, modules, packages, or functions within a component.
 
 ### Example module structure
 
@@ -249,7 +253,7 @@ log_trace_to_mlflow(request, evidence, model, response, scores)
 // fn validate_and_chunk(input: String) -> PyResult<Vec<String>>
 ```
 
-The implementation view is where code packages align to the abstractions shown in C4 Level 3, which is the recommended intent of the model [web:43].
+The implementation view is where code packages align to the abstractions shown in C4 Level 3, which is the recommended intent of the model.
 
 ---
 
@@ -281,7 +285,7 @@ The document uses **two complementary hierarchies**.
 
 ## 8. Human-in-the-Loop Flow
 
-Human-in-the-loop evaluation is important because real-world GenAI systems need human oversight and feedback loops, which MLflow 3 explicitly supports through annotations and feedback workflows [web:34][web:38].
+Human-in-the-loop evaluation is important because real-world GenAI systems need human oversight and feedback loops, which MLflow 3 explicitly supports through annotations and feedback workflows.
 
 ```mermaid
 flowchart TD
@@ -313,7 +317,7 @@ flowchart TD
 
 ## 9. Notebook and MLflow Monitoring
 
-MLflow supports GenAI tracing, evaluation, and human feedback workflows, while notebook-first patterns can be used to instrument traces, inspect runs, and analyse quality drift [web:34][web:36][web:41][web:47].
+MLflow supports GenAI tracing, evaluation, and human feedback workflows, while notebook-first patterns can be used to instrument traces, inspect runs, and analyse quality drift.
 
 ### Notebook Uses
 - trace exploration,
@@ -334,13 +338,13 @@ MLflow supports GenAI tracing, evaluation, and human feedback workflows, while n
 | Cost per completed case | Operational efficiency of routing strategy |
 
 ### Notebook Governance Rule
-Notebooks are not just for exploration. They act as supervised review surfaces for quality monitoring, replay, and adjudication analysis when connected to MLflow traces [web:36][web:41].
+Notebooks are not just for exploration. They act as supervised review surfaces for quality monitoring, replay, and adjudication analysis when connected to MLflow traces.
 
 ---
 
 ## 10. Model Routing Strategy
 
-Ollama exposes local APIs for models such as Llama 3.2, which is positioned for multilingual dialogue, retrieval, and summarisation tasks [web:45]. The architecture therefore routes simple and sensitive workloads locally first, then escalates when required.
+Ollama exposes local APIs for models such as Llama 3.2, which is positioned for multilingual dialogue, retrieval, and summarisation tasks. The architecture therefore routes simple and sensitive workloads locally first, then escalates when required.
 
 | Route | Model path | Best use |
 |---|---|---|
@@ -349,7 +353,7 @@ Ollama exposes local APIs for models such as Llama 3.2, which is positioned for 
 | R3 | GPT-120OSS-B cloud | Hard reasoning, complex adjudication, fallback for difficult cases |
 
 ### Routing Policy
-1. Try **local Llama 3.2B** for low-risk, low-complexity, or privacy-sensitive steps [web:45].
+1. Try **local Llama 3.2B** for low-risk, low-complexity, or privacy-sensitive steps .
 2. Escalate to **20B cloud** when the task needs stronger synthesis or longer-context reasoning.
 3. Escalate to **GPT-120OSS-B cloud** when quality gates detect ambiguity, contested evidence, or repeated failure.
 4. Send unresolved or policy-sensitive outputs to **human judges**.
@@ -362,7 +366,7 @@ curl http://localhost:11434/api/generate -d '{
 }'
 ```
 
-This is consistent with documented Ollama local API usage and model invocation patterns [web:45].
+This is consistent with documented Ollama local API usage and model invocation patterns.
 
 ---
 
@@ -387,7 +391,7 @@ This is consistent with documented Ollama local API usage and model invocation p
 | Escalation thresholds | Standardise when humans must review |
 | Production tracing | Connect live incidents to reproducible evidence |
 
-MLflow’s recent GenAI direction emphasizes tracing, evaluation, and feedback capture across the lifecycle, which aligns well with these governance needs [web:34][web:35][web:47].
+MLflow’s recent GenAI direction emphasizes tracing, evaluation, and feedback capture across the lifecycle, which aligns well with these governance needs.
 
 ---
 
@@ -404,6 +408,19 @@ MLflow’s recent GenAI direction emphasizes tracing, evaluation, and feedback c
 
 ---
 
-## Architecture Statement
-
-This architecture uses C4 and L1-L4 views to describe a governed generative AI workstream in which local Ollama-hosted Llama 3.2 handles private and low-cost tasks, cloud 20B and GPT-120OSS-B models handle harder reasoning, and MLflow plus notebook-based review provide the tracing, human feedback, and operational monitoring needed for trustworthy human-in-the-loop adjudication [web:34][web:36][web:38][web:41][web:45][web:47].
+# References 
+1.	https://ollama.com/library/llama3.2       
+2.	https://www.mlflow.org/docs/3.2.0/genai/mlflow-3/           
+3.	https://mlflow.org/docs/3.4.0rc0/genai/mlflow-3/    
+4.	https://docs.azure.cn/en-us/databricks/mlflow3/genai/     
+5.	https://docs.databricks.com/aws/en/mlflow3/genai/getting-started/human-feedback        
+6.	https://www.infoq.com/articles/C4-architecture-model/      
+7.	https://en.wikipedia.org/wiki/C4_model   
+8.	https://docs.databricks.com/aws/en/mlflow3/genai/overview/  
+9.	https://dev.to/lovestaco/making-sense-of-software-architecture-with-the-c4-model-1814  
+10.	https://learn.microsoft.com/en-us/azure/databricks/mlflow3/genai/getting-started/tracing/tracing-notebook    
+11.	https://docs.aws.amazon.com/sagemaker/latest/dg/mlflow.html 
+12.	https://www.linkedin.com/posts/aksalinnisha03_localai-ollama-llama-activity-7329777902651170816-3qpI 
+13.	https://www.datacamp.com/tutorial/run-llama-3-locally 
+14.	https://mlflow.org/docs/latest/ml/ 
+15.	https://ollama.com/library/llama3.2-vision 
